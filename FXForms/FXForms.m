@@ -1650,6 +1650,15 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     [self setNeedsLayout];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGRect labelFrame = self.textLabel.frame;
+    labelFrame.origin.y = 12;
+    labelFrame.size.height = 21;
+    self.textLabel.frame = labelFrame;
+}
+
 - (void)setUp
 {
     //override
