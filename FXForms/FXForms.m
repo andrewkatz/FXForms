@@ -1984,11 +1984,6 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return YES;
 }
 
-- (void)textFieldDidBeginEditing:(__unused UITextField *)textField
-{
-    [self.textField selectAll:nil];
-}
-
 - (BOOL)canBecomeFirstResponder
 {
     return YES;
