@@ -34,6 +34,8 @@
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #import <UIKit/UIKit.h>
 
+@class GBCurrencyTextField;
+
 
 #ifndef FXForms
 
@@ -184,6 +186,13 @@ static NSString *const FXFormFieldTypeImage = @"image";
 @interface FXFormTextFieldCell : FXFormBaseCell
 
 @property (nonatomic, readonly) UITextField *textField;
+
+@end
+
+
+@interface FXFormCurrencyCell : FXFormBaseCell
+
+@property (nonatomic, readonly) GBCurrencyTextField *textField;
 
 @end
 

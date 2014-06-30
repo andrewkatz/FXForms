@@ -32,6 +32,7 @@
 
 #import "FXForms.h"
 #import <objc/runtime.h>
+#import "GBCurrencyTextField.h"
 
 
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
@@ -2002,6 +2003,107 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 {
     return [self.textField becomeFirstResponder];
 }
+
+@end
+
+
+@interface FXFormCurrencyCell () <UITextFieldDelegate>
+
+@property (nonatomic) GBCurrencyTextField *textField;
+
+@end
+
+
+@implementation FXFormCurrencyCell
+
+- (void)setUp {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+
+    self.textField = [[GBCurrencyTextField alloc] initWithFrame:CGRectMake(0, 0, 200, 21)];
+    self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleLeftMargin;
+    self.textField.font = [UIFont systemFontOfSize:self.textLabel.font.pointSize];
+    self.textField.textColor = [UIColor colorWithRed:0.275f green:0.376f blue:0.522f alpha:1.000f];
+    self.textField.delegate = self;
+    self.textField.keyboardType = UIKeyboardTypeNumberPad;
+    [self.textField addTarget:self action:@selector(textDidChange) forControlEvents:UIControlEventEditingChanged];
+    [self.contentView addSubview:self.textField];
+
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self.textField action:NSSelectorFromString(@"becomeFirstResponder")]];
+}
+
+- (void)dealloc {
+    _textField.delegate = nil;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+
+    CGRect labelFrame = self.textLabel.frame;
+    labelFrame.size.width = MIN(MAX([self.textLabel sizeThatFits:CGSizeZero].width, FXFormFieldMinLabelWidth), FXFormFieldMaxLabelWidth);
+    self.textLabel.frame = labelFrame;
+
+	CGRect textFieldFrame = self.textField.frame;
+    textFieldFrame.origin.x = self.textLabel.frame.origin.x + MAX(FXFormFieldMinLabelWidth, self.textLabel.frame.size.width) + FXFormFieldLabelSpacing;
+    textFieldFrame.origin.y = (self.contentView.bounds.size.height - textFieldFrame.size.height) / 2;
+	textFieldFrame.size.width = self.textField.superview.frame.size.width - textFieldFrame.origin.x - FXFormFieldPaddingRight;
+	if (![self.textLabel.text length])
+    {
+		textFieldFrame.origin.x = FXFormFieldPaddingLeft;
+		textFieldFrame.size.width = self.contentView.bounds.size.width - FXFormFieldPaddingLeft - FXFormFieldPaddingRight;
+	}
+    else if (self.textField.textAlignment == NSTextAlignmentRight)
+    {
+		textFieldFrame.origin.x = self.textLabel.frame.origin.x + labelFrame.size.width + FXFormFieldLabelSpacing;
+		textFieldFrame.size.width = self.textField.superview.frame.size.width - textFieldFrame.origin.x - FXFormFieldPaddingRight;
+	}
+	self.textField.frame = textFieldFrame;
+}
+- (void)update
+{
+    self.textLabel.text = self.field.title;
+    self.textField.placeholder = [self.field.placeholder fieldDescription];
+    self.textField.text = [self.field fieldDescription];
+
+    self.textField.returnKeyType = UIReturnKeyDone;
+    self.textField.textAlignment = NSTextAlignmentRight;
+}
+
+- (void)textDidChange
+{
+    self.field.value = self.textField.text;
+}
+
+- (void)textFieldDidEndEditing:(__unused UITextField *)textField
+{
+    if (self.field.action) self.field.action(self);
+}
+
+- (BOOL)textFieldShouldBeginEditing:(__unused UITextField *)textField
+{
+    //get return key type
+    UIReturnKeyType returnKeyType = UIReturnKeyDone;
+    UITableViewCell <FXFormFieldCell> *nextCell = [self nextCell];
+    if ([nextCell canBecomeFirstResponder])
+    {
+        returnKeyType = UIReturnKeyNext;
+    }
+
+    self.textField.returnKeyType = returnKeyType;
+    return YES;
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)becomeFirstResponder
+{
+    return [self.textField becomeFirstResponder];
+}
+
 
 @end
 
