@@ -1806,6 +1806,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textField.minimumFontSize = FXFormLabelMinFontSize(self.textLabel);
     self.textField.textColor = [UIColor colorWithRed:0.275f green:0.376f blue:0.522f alpha:1.000f];
     self.textField.delegate = self;
+    [self.textField addTarget:self action:@selector(textDidChange) forControlEvents:UIControlEventEditingChanged];
     [self.contentView addSubview:self.textField];
     
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self.textField action:NSSelectorFromString(@"becomeFirstResponder")]];
@@ -1930,7 +1931,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return NO;
 }
 
-- (void)textFieldDidEndEditing:(__unused UITextField *)textField
+- (void)updateValue
 {
     id value = self.textField.text;
     if ([self.field.type isEqualToString:FXFormFieldTypeNumber])
@@ -1945,7 +1946,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     {
         value = [self.field.valueClass URLWithString:self.textField.text];
     }
-    
+
     //handle case where value is numeric but value class is string
     if (![value isKindOfClass:[NSString class]] && [self.field.valueClass isSubclassOfClass:[NSString class]])
     {
@@ -1953,6 +1954,15 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     }
 
     self.field.value = value;
+}
+
+- (void)textDidChange
+{
+    [self updateValue];
+}
+
+- (void)textFieldDidEndEditing:(__unused UITextField *)textField
+{
     if (self.field.action) self.field.action(self);
 }
 
