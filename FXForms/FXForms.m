@@ -34,7 +34,6 @@
 #import <objc/runtime.h>
 #import "GBCurrencyTextField.h"
 
-
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 #pragma GCC diagnostic ignored "-Warc-repeated-use-of-weak"
@@ -1655,7 +1654,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     [super layoutSubviews];
 
     CGRect labelFrame = self.textLabel.frame;
-    labelFrame.origin.y = 12;
+    labelFrame.origin.y = 11;
     labelFrame.size.height = 21;
     self.textLabel.frame = labelFrame;
 }
