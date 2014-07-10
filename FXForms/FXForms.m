@@ -1889,6 +1889,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textLabel.text = self.field.title;
     self.textField.placeholder = [self.field.placeholder fieldDescription];
     self.textField.text = [self.field fieldDescription];
+    self.textField.text = [self.textField.text stringByReplacingOccurrencesOfString:@" " withString:@"\u00a0"];
     
     self.textField.returnKeyType = UIReturnKeyDone;
     self.textField.textAlignment = NSTextAlignmentRight;
@@ -1942,7 +1943,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 
 - (void)updateValue
 {
-    id value = self.textField.text;
+    id value = [self.textField.text stringByReplacingOccurrencesOfString:@"\u00a0" withString:@" "];
     if ([self.field.type isEqualToString:FXFormFieldTypeNumber])
     {
         value = @([self.textField.text doubleValue]);
@@ -1968,6 +1969,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (void)textDidChange
 {
     [self updateValue];
+    [self update];
 }
 
 - (void)textFieldDidEndEditing:(__unused UITextField *)textField
