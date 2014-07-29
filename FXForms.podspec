@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.summary  = 'FXForms is an Objective-C library for easily creating table-based forms on iOS. It is ideal for settings pages or user data entry tasks.'
   s.homepage = 'https://github.com/nicklockwood/FXForms'
   s.authors  = 'Nick Lockwood'
-  s.source       = { :git => "https://github.com/andrewkatz/FXForms.git", :tag => "1.1.6.5" }
+  s.source       = { :git => "https://github.com/andrewkatz/FXForms.git", :tag => s.version.to_s }
   s.source_files = 'FXForms'
   s.requires_arc = true
   s.ios.deployment_target = '7.0'
