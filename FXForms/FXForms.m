@@ -1815,7 +1815,6 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textField.minimumFontSize = FXFormLabelMinFontSize(self.textLabel);
     self.textField.textColor = [UIColor colorWithRed:0.275f green:0.376f blue:0.522f alpha:1.000f];
     self.textField.delegate = self;
-    [self.textField addTarget:self action:@selector(textDidChange) forControlEvents:UIControlEventEditingChanged];
     [self.contentView addSubview:self.textField];
     
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self.textField action:NSSelectorFromString(@"becomeFirstResponder")]];
@@ -1971,10 +1970,30 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.field.value = value;
 }
 
-- (void)textDidChange
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    UITextPosition *beginning = textField.beginningOfDocument;
+    UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
+    UITextPosition *end = [textField positionFromPosition:start offset:range.length];
+    UITextRange *textRange = [textField textRangeFromPosition:start toPosition:end];
+    
+    // this will be the new cursor location after insert/paste/typing
+    NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
+    
+    // now apply the text changes that were typed or pasted in to the text field
+    [textField replaceRange:textRange withText:string];
+    
+    // now go modify the text in interesting ways doing our post processing of what was typed...
     [self updateValue];
+    
+    // now update the text field and reposition the cursor afterwards
     [self updateText];
+    
+    UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
+    UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
+    [textField setSelectedTextRange:newSelectedRange];
+    
+    return NO;
 }
 
 - (void)textFieldDidEndEditing:(__unused UITextField *)textField
@@ -2022,7 +2041,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 
 @implementation FXFormCurrencyCell
 
-- (void)setUp {
+- (void)setUp
+{
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
 
@@ -2038,7 +2058,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self.textField action:NSSelectorFromString(@"becomeFirstResponder")]];
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     _textField.delegate = nil;
 }
 
@@ -2066,6 +2087,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 	}
 	self.textField.frame = textFieldFrame;
 }
+
 - (void)update
 {
     self.textLabel.text = self.field.title;
