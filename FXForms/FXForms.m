@@ -1989,6 +1989,10 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     // now update the text field and reposition the cursor afterwards
     [self updateText];
     
+    if (cursorOffset > textField.text.length) {
+        cursorOffset = textField.text.length;
+    }
+    
     UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
     UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
     [textField setSelectedTextRange:newSelectedRange];
