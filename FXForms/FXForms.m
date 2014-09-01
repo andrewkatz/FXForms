@@ -2383,7 +2383,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     [super layoutSubviews];
     
     CGRect segmentedControlFrame = self.segmentedControl.frame;
-    segmentedControlFrame.origin.x = self.contentView.frame.size.width - segmentedControlFrame.size.width - 1;
+    segmentedControlFrame.origin.x = self.contentView.frame.size.width - segmentedControlFrame.size.width;
     self.segmentedControl.frame = segmentedControlFrame;
 }
 
@@ -2412,8 +2412,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     }
     
     self.segmentedControl = [[NYSegmentedControl alloc] initWithItems:items.count == 0 ? @[@""] : items];
-    self.segmentedControl.frame = CGRectMake(0, 2, 200, 40);
-    self.segmentedControl.cornerRadius = [GBStyle cornerRadius];
+    self.segmentedControl.frame = CGRectMake(0, 0, 200, 44);
+    self.segmentedControl.cornerRadius = 0;
     self.segmentedControl.drawsGradientBackground = NO;
     self.segmentedControl.borderWidth = 0;
     self.segmentedControl.titleFont = [GBStyle fontForSize:17];
