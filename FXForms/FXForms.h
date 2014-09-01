@@ -35,7 +35,7 @@
 #import <UIKit/UIKit.h>
 
 @class GBCurrencyTextField;
-
+@class NYSegmentedControl;
 
 #ifndef FXForms
 
@@ -207,6 +207,13 @@ static NSString *const FXFormFieldTypeImage = @"image";
 @interface FXFormSwitchCell : FXFormBaseCell
 
 @property (nonatomic, readonly) UISwitch *switchControl;
+
+@end
+
+
+@interface FXFormSegmentedCell : FXFormBaseCell
+
+@property (nonatomic, readonly) NYSegmentedControl *segmentedControl;
 
 @end
 

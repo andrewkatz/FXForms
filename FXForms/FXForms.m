@@ -32,7 +32,9 @@
 
 #import "FXForms.h"
 #import <objc/runtime.h>
-#import "GBCurrencyTextField.h"
+#import <NYSegmentedControl/NYSegmentedControl.h>
+#import <Skywalker/GBCurrencyTextField.h>
+#import <Skywalker/GBStyle.h>
 
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
@@ -2354,6 +2356,76 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 {
     self.field.value = @(self.switchControl.on);
     if (self.field.action) self.field.action(self);
+}
+
+@end
+
+
+@interface FXFormSegmentedCell ()
+
+@property (nonatomic, readwrite) NYSegmentedControl *segmentedControl;
+
+@end
+
+@implementation FXFormSegmentedCell
+
+- (void)setUp
+{
+    [super setUp];
+    
+    [self setUpSegmentedControl];
+    
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CGRect segmentedControlFrame = self.segmentedControl.frame;
+    segmentedControlFrame.origin.x = self.contentView.frame.size.width - segmentedControlFrame.size.width - 1;
+    self.segmentedControl.frame = segmentedControlFrame;
+}
+
+- (void)update
+{
+    self.textLabel.text = self.field.title;
+    
+    [self setUpSegmentedControl];
+    [self.segmentedControl setSelectedSegmentIndex:[self.field.value integerValue]];
+}
+
+- (void)valueChanged
+{
+    self.field.value = @(self.segmentedControl.selectedSegmentIndex);
+    if (self.field.action) self.field.action(self);
+}
+
+- (void)setUpSegmentedControl
+{
+    [self.segmentedControl removeFromSuperview];
+    
+    NSMutableArray *items = [NSMutableArray array];
+    for (int i = 0; i < [self.field options].count; i++)
+    {
+        [items addObject:[self.field optionDescriptionAtIndex:i]];
+    }
+    
+    self.segmentedControl = [[NYSegmentedControl alloc] initWithItems:items.count == 0 ? @[@""] : items];
+    self.segmentedControl.frame = CGRectMake(0, 2, 200, 40);
+    self.segmentedControl.cornerRadius = [GBStyle cornerRadius];
+    self.segmentedControl.drawsGradientBackground = NO;
+    self.segmentedControl.borderWidth = 0;
+    self.segmentedControl.titleFont = [GBStyle fontForSize:17];
+    self.segmentedControl.titleTextColor = [GBStyle darkGray];
+    self.segmentedControl.backgroundColor = [UIColor whiteColor];
+    self.segmentedControl.segmentIndicatorBorderWidth = 0;
+    self.segmentedControl.segmentIndicatorBackgroundColor = [GBStyle green];
+    self.segmentedControl.selectedTitleFont = [GBStyle fontForSize:17];
+    self.segmentedControl.selectedTitleTextColor = [UIColor whiteColor];
+    
+    [self.segmentedControl addTarget:self action:@selector(valueChanged) forControlEvents:UIControlEventValueChanged];
+    [self.contentView addSubview:self.segmentedControl];
 }
 
 @end
