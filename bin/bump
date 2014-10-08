@@ -20,12 +20,3 @@ git push --tags
 
 # Update private pod repo
 pod repo push greenbits $POD_SPEC
-
-# Move file in private pod repo (cocoapods bug)
-cd ~/.cocoapods/repos/greenbits
-git pull
-mv $POD_NAME/$VERSION Specs/$POD_NAME
-rm -rf $POD_NAME
-git add -A
-git commit -m "Move podspec to correct location"
-git push
