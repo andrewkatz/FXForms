@@ -1991,7 +1991,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
     
     // now apply the text changes that were typed or pasted in to the text field
-    [textField replaceRange:textRange withText:string];
+    NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    textField.text = newText;
     
     // now go modify the text in interesting ways doing our post processing of what was typed...
     [self updateValue];
