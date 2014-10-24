@@ -1891,14 +1891,6 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textField.placeholder = [self.field.placeholder fieldDescription];
     self.textField.text = [self.field fieldDescription];
     self.textField.text = [self.textField.text stringByReplacingOccurrencesOfString:@" " withString:@"\u00a0"];
-    
-    if ([self.field.type isEqualToString:FXFormFieldTypeNumber] || [self.field.type isEqualToString:FXFormFieldTypeInteger])
-    {
-        if ([self.field.value integerValue] == 0)
-        {
-            self.textField.text = @"";
-        }
-    }
 }
 
 - (void)update
@@ -2000,7 +1992,12 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     // now update the text field and reposition the cursor afterwards
     [self updateText];
     
-    if (cursorOffset > textField.text.length) {
+    BOOL zeroValueNumber = NO;
+    if ([self.field.type isEqualToString:FXFormFieldTypeNumber] || [self.field.type isEqualToString:FXFormFieldTypeInteger]) {
+        zeroValueNumber = [self.field.value doubleValue] == 0;
+    }
+    
+    if (cursorOffset > textField.text.length || zeroValueNumber) {
         cursorOffset = textField.text.length;
     }
     
