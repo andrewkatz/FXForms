@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'FXForms'
-  s.version  = '1.1.6.12'
+  s.version  = '1.1.6.13'
   s.license  = 'zlib'
   s.summary  = 'FXForms is an Objective-C library for easily creating table-based forms on iOS. It is ideal for settings pages or user data entry tasks.'
   s.homepage = 'https://github.com/nicklockwood/FXForms'
