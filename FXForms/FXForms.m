@@ -1820,6 +1820,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     [self.contentView addSubview:self.textField];
     
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self.textField action:NSSelectorFromString(@"becomeFirstResponder")]];
+    
+    self.maxLength = 255;
 }
 
 - (void)dealloc
@@ -1974,6 +1976,11 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    if (newLength > self.maxLength) {
+        return NO;
+    }
+        
     UITextPosition *beginning = textField.beginningOfDocument;
     UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
     UITextPosition *end = [textField positionFromPosition:start offset:range.length];
