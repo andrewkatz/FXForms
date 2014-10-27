@@ -187,7 +187,7 @@ static NSString *const FXFormFieldTypeImage = @"image";
 
 @property (nonatomic, readonly) UITextField *textField;
 @property (nonatomic, assign) NSUInteger maxLength;
-@property (nonatomic) NSArray *invalidCharacters;
+@property (nonatomic) NSRegularExpression *invalidCharacters;
 
 @end
 

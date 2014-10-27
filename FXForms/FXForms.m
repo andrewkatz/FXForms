@@ -1980,12 +1980,9 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if (newLength > self.maxLength) {
         return NO;
     }
-
-    if ([self.invalidCharacters count] > 0) {
-        for (NSString *character in self.invalidCharacters) {
-            string = [string stringByReplacingOccurrencesOfString:character withString:@""];
-            newLength = string.length;
-        }
+    
+    if (self.invalidCharacters != nil) {
+        string = [self.invalidCharacters stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, string.length) withTemplate:@""];
     }
 
     UITextPosition *beginning = textField.beginningOfDocument;
