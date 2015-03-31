@@ -19,4 +19,4 @@ git tag $VERSION
 git push --tags
 
 # Update private pod repo
-pod repo push greenbits $POD_SPEC
+pod repo push greenbits $POD_SPEC --verbose
