@@ -2156,6 +2156,16 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return [self.textField becomeFirstResponder];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    UITableViewCell <FXFormFieldCell> *nextCell = [self nextCell];
+    if ([nextCell canBecomeFirstResponder])
+    {
+        [nextCell becomeFirstResponder];
+    }
+
+    return YES;
+}
 
 @end
 
