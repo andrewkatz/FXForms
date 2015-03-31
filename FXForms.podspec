@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/andrewkatz/FXForms.git", :tag => s.version.to_s }
   s.source_files = 'FXForms'
   s.requires_arc = true
-  s.ios.deployment_target = '7.0'
   s.dependency 'Skywalker'
+
+  s.platform = :ios, '8.0'
 end
